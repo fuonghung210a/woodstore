@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Loại gỗ — enum cố định, không cần table riêng
+enum WoodSpecies {
+  HUONG       // Gỗ hương
+  TRAC        // Gỗ trắc
+  MUN         // Gỗ mun
+  GO_DO       // Gỗ gõ đỏ
+  CAM_LAI     // Gỗ cẩm lai
+  SON_TA      // Gỗ sơn ta
+  THONG       // Gỗ thông
+  SUAN        // Gỗ xoan
+  KHAC        // Loại khác
+}
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  parentId    String?    @db.Uuid
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
+  sortOrder   Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([isActive])
+  @@index([parentId])
+}
+
+model Product {
+  id            String      @id @default(uuid()) @db.Uuid
+  name          String
+  slug          String      @unique
+  description   String?
+  price         Decimal     @db.Decimal(10, 2)
+  currency      String      @default("VND")
+
+  // Wood info (enum, not FK)
+  woodSpecies   WoodSpecies
+
+  // Category (optional FK)
+  categoryId    String?     @db.Uuid
+  category      Category?   @relation(fields: [categoryId], references: [id])
+
+  // Dimensions (cm)
+  lengthCm      Decimal?    @db.Decimal(8, 2)
+  widthCm       Decimal?    @db.Decimal(8, 2)
+  heightCm      Decimal?    @db.Decimal(8, 2)
+  weightKg      Decimal?    @db.Decimal(8, 2)
+
+  // Craft details
+  craftsmanship String?
+  artisan       String?
+  finishType    String?
+
+  // Inventory
+  sku           String?     @unique
+  stockQuantity Int         @default(0)
+  isOneOfAKind  Boolean     @default(false)
+
+  // Media & tags
+  images        String[]
+  tags          String[]
+
+  // Status
+  isActive      Boolean     @default(true)
+  isFeatured    Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  deletedAt     DateTime?
+
+  @@index([isActive, deletedAt])
+  @@index([categoryId, isActive])
+  @@index([woodSpecies, isActive])
+  @@index([slug, isActive])
+  @@index([isFeatured, isActive])
+  @@index([price])
+}

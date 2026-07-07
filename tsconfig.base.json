@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2022",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "incremental": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@woodshop/common": ["packages/common/src"],
+      "@woodshop/config": ["packages/config/src"],
+      "@woodshop/logger": ["packages/logger/src"],
+      "@woodshop/grpc": ["packages/grpc/src"],
+      "@woodshop/kafka": ["packages/kafka/src"],
+      "@woodshop/validation": ["packages/validation/src"],
+      "@woodshop/database": ["packages/database/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
