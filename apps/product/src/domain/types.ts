@@ -1,6 +1,6 @@
-import { Dimensions } from './value-objects/dimensions.vo';
-import { Price } from './value-objects/price.vo';
-import { WoodSpecies } from './types/wood-species';
+import { Dimensions } from "./value-objects/dimensions.vo";
+import { Price } from "./value-objects/price.vo";
+import { WoodSpecies } from "./types/wood-species";
 
 export interface PaginationParams {
   page: number;
