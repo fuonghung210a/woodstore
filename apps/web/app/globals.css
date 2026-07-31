@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-rice text-ink font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  /* === Gold-Leaf primary button === */
+  .btn-gold {
+    @apply inline-block bg-gold text-walnut-dark font-sans font-semibold
+      text-label-md uppercase tracking-wider
+      px-8 py-3 rounded transition-all duration-300
+      shadow-heritage;
+  }
+  .btn-gold:hover {
+    @apply shadow-heritage-lg;
+    background: linear-gradient(
+      135deg,
+      #e9c349 0%,
+      #d4af37 40%,
+      #c5a059 70%,
+      #d4af37 100%
+    );
+  }
+
+  /* === Ghost secondary button (1px gold border) === */
+  .btn-ghost {
+    @apply inline-block border border-gold text-walnut font-sans font-semibold
+      text-label-md uppercase tracking-wider
+      px-8 py-3 rounded transition-all duration-300
+      bg-transparent;
+  }
+  .btn-ghost:hover {
+    @apply bg-gold/10;
+  }
+
+  /* === Frameless product card === */
+  .card-frameless {
+    @apply block rounded overflow-hidden
+      transition-all duration-300;
+  }
+  .card-frameless:hover .card-image {
+    @apply scale-105;
+  }
+  .card-image {
+    @apply transition-transform duration-500;
+  }
+
+  /* === Double-line border (lacquerware box) === */
+  .border-double-line {
+    position: relative;
+    border: 2px solid #4a2c2a;
+  }
+  .border-double-line::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border: 1px solid #d4af37;
+    border-radius: 0.125rem;
+    pointer-events: none;
+  }
+
+  /* === Underlined input (handwritten appeal) === */
+  .input-underline {
+    @apply w-full bg-transparent border-b border-walnut/30
+      py-2 text-body-md text-ink
+      focus:outline-none focus:border-gold
+      transition-colors duration-300;
+  }
+
+  /* === Wood chip with gold dot === */
+  .chip-wood {
+    @apply inline-flex items-center gap-2
+      bg-rice-dim border border-walnut/10
+      text-label-sm text-walnut uppercase tracking-wider
+      px-3 py-1 rounded-full;
+  }
+  .chip-wood::before {
+    content: '';
+    @apply w-1.5 h-1.5 rounded-full bg-gold;
+  }
+
+  /* === Section label (stamped uppercase) === */
+  .section-label {
+    @apply text-label-sm text-mahogany uppercase tracking-widest
+      flex items-center gap-4;
+  }
+  .section-label::after {
+    content: '';
+    @apply flex-1 h-px bg-gold/40;
+  }
+
+  /* === Cloud motif divider === */
+  .cloud-divider {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24' fill='none'%3E%3Cpath d='M12 12c0-4 3-7 7-7s7 3 7 7c-4 1-7 4-7 8-3-1-5-3-7-8zM48 10c0-3 2.5-5.5 5.5-5.5S59 7 59 10c-3 .8-5 3-5 6-2.3-.8-4-2.3-6-6zM84 13c0-3.5 3-6.5 6.5-6.5S97 9.5 97 13c-3.5 1-6 3.5-6 7-2.5-1-4.5-3-7-7z' stroke='%23D4AF37' stroke-opacity='0.5' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: center;
+    background-size: 120px 24px;
+    height: 24px;
+  }
+
+  /* === Cloud motif watermark (behind product images) === */
+  .cloud-watermark {
+    position: relative;
+    overflow: hidden;
+  }
+  .cloud-watermark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120' fill='none'%3E%3Cpath d='M30 60c0-10 8-18 18-18s18 8 18 18c-10 3-18 10-18 20-8-3-14-8-18-20zM120 50c0-8 6-14 14-14s14 6 14 14c-8 2-14 8-14 15-6-2-10-7-14-15zM190 70c0-9 7-16 16-16' stroke='%238B4513' stroke-opacity='0.05' stroke-width='2'/%3E%3C/svg%3E");
+    background-size: 200px 120px;
+    opacity: 1;
+    pointer-events: none;
+  }
+  .cloud-watermark > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* === Image caption (bottom-right, semi-transparent rice) === */
+  .img-caption {
+    @apply absolute bottom-3 right-3
+      bg-rice/80 text-label-sm text-walnut
+      px-3 py-1 rounded;
+  }
+
+  /* === Enquire icon link (gold accent) === */
+  .enquire-link {
+    @apply inline-flex items-center gap-1
+      text-label-sm text-mahogany uppercase tracking-wider
+      transition-colors duration-300;
+  }
+  .enquire-link:hover {
+    @apply text-gold;
+  }
+}

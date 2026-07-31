@@ -9,6 +9,7 @@ import { CreateProductHandler } from "../application/handlers/create-product.han
 import { UpdateProductHandler } from "../application/handlers/update-product.handler";
 import { SoftDeleteProductHandler } from "../application/handlers/soft-delete-product.handler";
 import { GetProductHandler } from "../application/handlers/get-product.handler";
+import { GetProductBySlugHandler } from "../application/handlers/get-product-by-slug.handler";
 import { FindFeaturedProductsHandler } from "../application/handlers/find-featured-products.handler";
 import { ListProductsHandler } from "../application/handlers/list-products.handler";
 import { SearchProductsByWoodSpeciesHandler } from "../application/handlers/search-products-by-wood-species.handler";
@@ -32,16 +33,19 @@ import { GetPostBySlugHandler } from "../application/handlers/get-post-by-slug.h
 import { ListPostsHandler } from "../application/handlers/list-posts.handler";
 import { ListPublishedPostsHandler } from "../application/handlers/list-published-posts.handler";
 import { PostController } from "../presentation/post.controller";
+import { UploadController } from "../presentation/upload.controller";
+import { StorageModule } from "./storage/storage.module";
 
 @Module({
   imports: [
+    StorageModule,
     CqrsModule.forRoot(),
     DatabaseModule.forRoot({
       url: process.env.DATABASE_URL!,
       logLevel: process.env.NODE_ENV === "development" ? "query" : "error",
     }),
   ],
-  controllers: [ProductController, CategoryController, PostController],
+  controllers: [ProductController, CategoryController, PostController, UploadController],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: IProductRepository, useClass: PrismaProductRepository },
@@ -51,6 +55,7 @@ import { PostController } from "../presentation/post.controller";
     UpdateProductHandler,
     SoftDeleteProductHandler,
     GetProductHandler,
+    GetProductBySlugHandler,
     FindFeaturedProductsHandler,
     ListProductsHandler,
     SearchProductsByWoodSpeciesHandler,

@@ -1,11 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AdminModule as AdminJSModule } from '@adminjs/nestjs';
 import { Database, Resource } from '@adminjs/prisma';
-import AdminJS from 'adminjs';
+import AdminJS, { ComponentLoader } from 'adminjs';
 import { PrismaService } from '@woodshop/database';
+import { S3Service } from './storage/s3.service';
+import { StorageModule } from './storage/storage.module';
+import {
+  deleteRemovedProductImagesAfterSave,
+  rememberRemovedProductImages,
+} from './admin/product-images.hooks';
 
 // Kết nối AdminJS với Prisma
 AdminJS.registerAdapter({ Database, Resource });
+
+const componentLoader = new ComponentLoader();
+const ProductImages = componentLoader.add(
+  'ProductImages',
+  './admin/components/product-images',
+);
 
 /**
  * @adminjs/prisma@3 được viết cho Prisma 4 (dùng client._baseDmmf).
@@ -49,12 +61,14 @@ const authenticate = async (email: string, password: string) => {
 @Module({
   imports: [
     AdminJSModule.createAdminAsync({
-      useFactory: (prisma: PrismaService) => {
+      imports: [StorageModule],
+      useFactory: (prisma: PrismaService, s3Service: S3Service) => {
         const modelMap = patchPrismaForAdminJS(prisma);
 
         return {
           adminJsOptions: {
             rootPath: '/admin',
+            componentLoader,
             resources: [
               {
                 resource: { model: modelMap.Product, client: prisma },
@@ -65,6 +79,19 @@ const authenticate = async (email: string, password: string) => {
                     widthCm: { type: 'number' },
                     heightCm: { type: 'number' },
                     weightKg: { type: 'number' },
+                    images: {
+                      type: 'string',
+                      isArray: true,
+                      components: {
+                        edit: ProductImages,
+                      },
+                    },
+                  },
+                  actions: {
+                    edit: {
+                      before: rememberRemovedProductImages,
+                      after: deleteRemovedProductImagesAfterSave(s3Service),
+                    },
                   },
                 },
               },
@@ -80,7 +107,7 @@ const authenticate = async (email: string, password: string) => {
           },
         };
       },
-      inject: [PrismaService],
+      inject: [PrismaService, S3Service],
     }),
   ],
 })

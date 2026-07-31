@@ -20,10 +20,12 @@ import { CreateProductSchema, CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductSchema, UpdateProductDto } from './dto/update-product.dto';
 import { ZodValidationPipe } from './pipes/zod-validation.pipe';
 import { ApiZodBody } from './decorators/api-zod-body.decorator';
+import { WoodSpecies } from '../domain/types/wood-species';
 import { CreateProductCommand } from '../application/commands/create-product.command';
 import { UpdateProductCommand } from '../application/commands/update-product.command';
 import { SoftDeleteProductCommand } from '../application/commands/soft-delete-product.command';
 import { GetProductQuery } from '../application/queries/get-product.query';
+import { GetProductBySlugQuery } from '../application/queries/get-product-by-slug.query';
 import { ListProductsQuery } from '../application/queries/list-products.query';
 import { FindFeaturedProductsQuery } from '../application/queries/find-featured-products.query';
 import { SearchProductsByWoodSpeciesQuery } from '../application/queries/search-products-by-wood-species.query';
@@ -54,12 +56,16 @@ export class ProductController {
   @ApiQuery({ name: 'search', required: false, type: String, description: 'Tìm theo tên hoặc tag' })
   @ApiQuery({ name: 'minPrice', required: false, type: Number })
   @ApiQuery({ name: 'maxPrice', required: false, type: Number })
+  @ApiQuery({ name: 'woodSpecies', required: false, enum: ['HUONG', 'TRAC', 'MUN', 'GO_DO', 'CAM_LAI', 'SON_TA', 'THONG', 'SUAN', 'KHAC'] })
+  @ApiQuery({ name: 'categoryId', required: false, type: String })
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('search') search?: string,
     @Query('minPrice') minPrice?: string,
     @Query('maxPrice') maxPrice?: string,
+    @Query('woodSpecies') woodSpecies?: string,
+    @Query('categoryId') categoryId?: string,
   ) {
     return this.queryBus.execute(
       new ListProductsQuery(
@@ -67,6 +73,8 @@ export class ProductController {
           search,
           minPrice: minPrice ? Number(minPrice) : undefined,
           maxPrice: maxPrice ? Number(maxPrice) : undefined,
+          woodSpecies: woodSpecies as WoodSpecies | undefined,
+          categoryId,
         },
         { page: Number(page) || 1, limit: Number(limit) || 20 },
       ),
@@ -105,6 +113,13 @@ export class ProductController {
   @ApiResponse({ status: 404, description: 'Không tìm thấy sản phẩm' })
   findById(@Param('id') id: string) {
     return this.queryBus.execute(new GetProductQuery(id));
+  }
+
+  @Get('by-slug/:slug')
+  @ApiOperation({ summary: 'Chi tiết sản phẩm theo slug (cho website)' })
+  @ApiParam({ name: 'slug', description: 'Slug sản phẩm' })
+  findBySlug(@Param('slug') slug: string) {
+    return this.queryBus.execute(new GetProductBySlugQuery(slug));
   }
 
   @Get('by-wood/:species')
