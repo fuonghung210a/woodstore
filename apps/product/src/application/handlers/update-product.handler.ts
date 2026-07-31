@@ -7,6 +7,7 @@ import {
 import { ProductEntity } from '../../domain/entities/product.entity';
 import { Price } from '../../domain/value-objects/price.vo';
 import { WoodSpecies } from '../../domain/types/wood-species';
+import { ProductNotFoundException } from '../../domain/exceptions/product-not-found.exception';
 import { UpdateProductCommand } from '../commands/update-product.command';
 
 @CommandHandler(UpdateProductCommand)
@@ -20,6 +21,11 @@ export class UpdateProductHandler
 
   async execute(command: UpdateProductCommand): Promise<ProductEntity> {
     const dto = command.data;
+
+    const existing = await this.productRepository.findById(command.id);
+    if (!existing) {
+      throw new ProductNotFoundException(command.id);
+    }
 
     return this.productRepository.update(command.id, {
       name: dto.name,

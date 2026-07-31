@@ -19,6 +19,8 @@ import { GetCategoryHandler } from "../application/handlers/get-category.handler
 import { ListCategoriesHandler } from "../application/handlers/list-categories.handler";
 import { FindCategoryChildrenHandler } from "../application/handlers/find-category-children.handler";
 import { CategoryController } from "../presentation/category.controller";
+import { APP_FILTER } from "@nestjs/core";
+import { GlobalExceptionFilter } from "../presentation/filters/global-exception.filter";
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { CategoryController } from "../presentation/category.controller";
   ],
   controllers: [ProductController, CategoryController],
   providers: [
+    { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: IProductRepository, useClass: PrismaProductRepository },
     { provide: ICategoryRepository, useClass: PrismaCategoryRepository },
     CreateProductHandler,
