@@ -22,6 +22,16 @@ import { CategoryController } from "../presentation/category.controller";
 import { APP_FILTER } from "@nestjs/core";
 import { GlobalExceptionFilter } from "../presentation/filters/global-exception.filter";
 import { GetHomepageDataHandler } from "../application/handlers/get-homepage-data.handler";
+import { PrismaPostRepository } from "./database/repositories/post.repository.impl";
+import { IPostRepository } from "../domain/repositories/post-repository.interface";
+import { CreatePostHandler } from "../application/handlers/create-post.handler";
+import { UpdatePostHandler } from "../application/handlers/update-post.handler";
+import { SoftDeletePostHandler } from "../application/handlers/soft-delete-post.handler";
+import { GetPostHandler } from "../application/handlers/get-post.handler";
+import { GetPostBySlugHandler } from "../application/handlers/get-post-by-slug.handler";
+import { ListPostsHandler } from "../application/handlers/list-posts.handler";
+import { ListPublishedPostsHandler } from "../application/handlers/list-published-posts.handler";
+import { PostController } from "../presentation/post.controller";
 
 @Module({
   imports: [
@@ -31,11 +41,12 @@ import { GetHomepageDataHandler } from "../application/handlers/get-homepage-dat
       logLevel: process.env.NODE_ENV === "development" ? "query" : "error",
     }),
   ],
-  controllers: [ProductController, CategoryController],
+  controllers: [ProductController, CategoryController, PostController],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: IProductRepository, useClass: PrismaProductRepository },
     { provide: ICategoryRepository, useClass: PrismaCategoryRepository },
+    { provide: IPostRepository, useClass: PrismaPostRepository },
     CreateProductHandler,
     UpdateProductHandler,
     SoftDeleteProductHandler,
@@ -49,6 +60,13 @@ import { GetHomepageDataHandler } from "../application/handlers/get-homepage-dat
     ListCategoriesHandler,
     FindCategoryChildrenHandler,
     GetHomepageDataHandler,
+    CreatePostHandler,
+    UpdatePostHandler,
+    SoftDeletePostHandler,
+    GetPostHandler,
+    GetPostBySlugHandler,
+    ListPostsHandler,
+    ListPublishedPostsHandler,
   ],
   exports: [IProductRepository, ICategoryRepository],
 })

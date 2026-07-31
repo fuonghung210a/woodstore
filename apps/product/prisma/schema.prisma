@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -19,6 +18,12 @@ enum WoodSpecies {
   THONG       // Gỗ thông
   SUAN        // Gỗ xoan
   KHAC        // Loại khác
+}
+
+// Trạng thái bài viết
+enum PostStatus {
+  DRAFT       // Nháp
+  PUBLISHED   // Đã xuất bản
 }
 
 model Category {
@@ -87,4 +92,29 @@ model Product {
   @@index([slug, isActive])
   @@index([isFeatured, isActive])
   @@index([price])
+}
+
+model Post {
+  id              String     @id @default(uuid()) @db.Uuid
+  title           String
+  slug            String     @unique
+  content         String     @db.Text
+  excerpt         String?
+  coverImage      String?
+  tags            String[]
+  status          PostStatus @default(DRAFT)
+  publishedAt     DateTime?
+  metaTitle       String?
+  metaDescription String?
+  author          String?
+  relatedProductIds String[]
+
+  isActive        Boolean    @default(true)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  deletedAt       DateTime?
+
+  @@index([status, isActive, deletedAt])
+  @@index([publishedAt])
+  @@index([slug, isActive])
 }

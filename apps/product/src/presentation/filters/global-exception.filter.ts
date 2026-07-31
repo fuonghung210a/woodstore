@@ -23,6 +23,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   private static readonly DOMAIN_STATUS_MAP: Record<string, HttpStatus> = {
     PRODUCT_NOT_FOUND: HttpStatus.NOT_FOUND,
     CATEGORY_NOT_FOUND: HttpStatus.NOT_FOUND,
+    POST_NOT_FOUND: HttpStatus.NOT_FOUND,
   };
 
   catch(exception: unknown, host: ArgumentsHost) {
