@@ -16,6 +16,7 @@ export interface PaginatedResult<T> {
 }
 
 export interface ProductFilter {
+  search?: string;
   categoryId?: string;
   woodSpecies?: WoodSpecies;
   isActive?: boolean;

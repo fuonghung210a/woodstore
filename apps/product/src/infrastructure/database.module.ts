@@ -21,6 +21,7 @@ import { FindCategoryChildrenHandler } from "../application/handlers/find-catego
 import { CategoryController } from "../presentation/category.controller";
 import { APP_FILTER } from "@nestjs/core";
 import { GlobalExceptionFilter } from "../presentation/filters/global-exception.filter";
+import { GetHomepageDataHandler } from "../application/handlers/get-homepage-data.handler";
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { GlobalExceptionFilter } from "../presentation/filters/global-exception.
     GetCategoryHandler,
     ListCategoriesHandler,
     FindCategoryChildrenHandler,
+    GetHomepageDataHandler,
   ],
   exports: [IProductRepository, ICategoryRepository],
 })

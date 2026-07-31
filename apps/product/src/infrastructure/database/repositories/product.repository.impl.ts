@@ -74,6 +74,16 @@ export class PrismaProductRepository implements IProductRepositoryType {
     return records.map((r) => this.toEntity(r));
   }
 
+  async findNewest(limit: number): Promise<ProductEntity[]> {
+    const records = await this.prisma.product.findMany({
+      where: { isActive: true, deletedAt: null },
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: { category: true },
+    });
+    return records.map((r) => this.toEntity(r));
+  }
+
   async create(data: CreateProductInput): Promise<ProductEntity> {
     const record = await this.prisma.product.create({
       data: {
@@ -176,6 +186,12 @@ export class PrismaProductRepository implements IProductRepositoryType {
       isActive: filter.isActive ?? true,
       deletedAt: null,
     };
+    if (filter.search) {
+      where.OR = [
+        { name: { contains: filter.search, mode: 'insensitive' } },
+        { tags: { has: filter.search } },
+      ];
+    }
     if (filter.categoryId) where.categoryId = filter.categoryId;
     if (filter.woodSpecies) where.woodSpecies = filter.woodSpecies;
     if (filter.isFeatured !== undefined) where.isFeatured = filter.isFeatured;

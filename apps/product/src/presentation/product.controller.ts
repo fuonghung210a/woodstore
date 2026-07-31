@@ -27,6 +27,7 @@ import { GetProductQuery } from '../application/queries/get-product.query';
 import { ListProductsQuery } from '../application/queries/list-products.query';
 import { FindFeaturedProductsQuery } from '../application/queries/find-featured-products.query';
 import { SearchProductsByWoodSpeciesQuery } from '../application/queries/search-products-by-wood-species.query';
+import { GetHomepageDataQuery } from '../application/queries/get-homepage-data.query';
 
 @ApiTags('products')
 @Controller('products')
@@ -50,14 +51,40 @@ export class ProductController {
   @ApiOperation({ summary: 'Danh sách sản phẩm' })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'search', required: false, type: String, description: 'Tìm theo tên hoặc tag' })
+  @ApiQuery({ name: 'minPrice', required: false, type: Number })
+  @ApiQuery({ name: 'maxPrice', required: false, type: Number })
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
   ) {
     return this.queryBus.execute(
       new ListProductsQuery(
-        {},
+        {
+          search,
+          minPrice: minPrice ? Number(minPrice) : undefined,
+          maxPrice: maxPrice ? Number(maxPrice) : undefined,
+        },
         { page: Number(page) || 1, limit: Number(limit) || 20 },
+      ),
+    );
+  }
+
+  @Get('homepage')
+  @ApiOperation({ summary: 'Dữ liệu trang chủ (danh mục + nổi bật + mới nhất)' })
+  @ApiQuery({ name: 'featuredLimit', required: false, type: Number })
+  @ApiQuery({ name: 'newestLimit', required: false, type: Number })
+  getHomepage(
+    @Query('featuredLimit') featuredLimit?: string,
+    @Query('newestLimit') newestLimit?: string,
+  ) {
+    return this.queryBus.execute(
+      new GetHomepageDataQuery(
+        featuredLimit ? Number(featuredLimit) : 8,
+        newestLimit ? Number(newestLimit) : 8,
       ),
     );
   }

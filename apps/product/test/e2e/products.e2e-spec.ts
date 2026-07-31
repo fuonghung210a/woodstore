@@ -58,6 +58,46 @@ describe('ProductController (e2e)', () => {
     expect(res.body.limit).toBe(5);
   });
 
+  it('GET /products?search= → tìm theo tên', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/products?search=hoành phi')
+      .expect(200);
+
+    expect(res.body.total).toBeGreaterThan(0);
+    expect(
+      res.body.data.every((p: { name: string }) =>
+        p.name.toLowerCase().includes('hoành phi'),
+      ),
+    ).toBe(true);
+  });
+
+  it('GET /products?minPrice&maxPrice= → lọc theo khoảng giá', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/products?minPrice=2000000&maxPrice=5000000')
+      .expect(200);
+
+    expect(res.body.total).toBeGreaterThan(0);
+    expect(
+      res.body.data.every(
+        (p: { price: { amount: number } }) =>
+          p.price.amount >= 2000000 && p.price.amount <= 5000000,
+      ),
+    ).toBe(true);
+  });
+
+  it('GET /products/homepage → categories + featured + newest', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/products/homepage')
+      .expect(200);
+
+    expect(res.body).toHaveProperty('categories');
+    expect(res.body).toHaveProperty('featuredProducts');
+    expect(res.body).toHaveProperty('newestProducts');
+    expect(Array.isArray(res.body.categories)).toBe(true);
+    expect(res.body.categories.length).toBeGreaterThan(0);
+    expect(res.body.newestProducts.length).toBeLessThanOrEqual(8);
+  });
+
   it('GET /products/:id với ID không tồn tại → 404 PRODUCT_NOT_FOUND', async () => {
     const fakeId = '00000000-0000-0000-0000-000000000000';
     const res = await request(app.getHttpServer())

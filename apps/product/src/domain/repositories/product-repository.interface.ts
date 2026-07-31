@@ -18,6 +18,7 @@ export interface IProductRepositoryType {
     pagination: PaginationParams,
   ): Promise<PaginatedResult<ProductEntity>>;
   findFeatured(limit: number): Promise<ProductEntity[]>;
+  findNewest(limit: number): Promise<ProductEntity[]>;
   create(data: CreateProductInput): Promise<ProductEntity>;
   update(id: string, data: UpdateProductInput): Promise<ProductEntity>;
   softDelete(id: string): Promise<void>;
