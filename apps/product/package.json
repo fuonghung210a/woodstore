@@ -15,6 +15,9 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@adminjs/express": "^5.1.0",
+    "@adminjs/nestjs": "^5.1.1",
+    "@adminjs/prisma": "3.0.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.0.0",
@@ -23,6 +26,7 @@
     "@nestjs/swagger": "^7.4.2",
     "@prisma/client": "^5.0.0",
     "@woodshop/database": "workspace:*",
+    "adminjs": "^6.8.7",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "swagger-ui-express": "^5.0.1",
