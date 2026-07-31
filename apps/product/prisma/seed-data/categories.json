@@ -1,0 +1,44 @@
+[
+  {
+    "id": "96a79fe9-b82e-4539-91a4-65537ab17ec1",
+    "name": "Tượng phong thủy",
+    "slug": "tuong-phong-thuy",
+    "description": "Tỳ hưu, cóc ngậm tiền, thiềm thừ, kỳ lân và các linh vật phong thủy bằng gỗ",
+    "sortOrder": 1
+  },
+  {
+    "id": "271d8155-c4a9-4594-9e80-6fedb7fc60c4",
+    "name": "Tượng Phật & Linh vật",
+    "slug": "tuong-phat-linh-vat",
+    "description": "Tượng Phật Di Lặc, Quan Âm, Tam Đa, tứ linh và các tượng linh vật truyền thống",
+    "sortOrder": 2
+  },
+  {
+    "id": "df9f25cb-18bf-4ae7-b4c4-269b094f18f6",
+    "name": "Đồ thờ cúng",
+    "slug": "do-tho-cung",
+    "description": "Bàn thờ, hoành phi, câu đối, bao lam, bài vị, lư hương và đồ thờ gia tiên",
+    "sortOrder": 3
+  },
+  {
+    "id": "8501908f-30ca-4e81-bb0c-51706190b7cf",
+    "name": "Trang trí nội thất",
+    "slug": "trang-tri-noi-that",
+    "description": "Tranh gỗ, tượng nghệ thuật, đồ decor để bàn và các sản phẩm trang trí cao cấp",
+    "sortOrder": 4
+  },
+  {
+    "id": "a19af854-936e-4d35-a510-4042925750d4",
+    "name": "Vòng tay & Chuỗi hạt",
+    "slug": "vong-tay-chuoi-hat",
+    "description": "Vòng tay phong thủy, tràng hạt gỗ trầm, vòng gỗ sưa và các sản phẩm đeo tay tinh xảo",
+    "sortOrder": 5
+  },
+  {
+    "id": "13b5ef33-29df-49c8-ac9a-d0a7fe084938",
+    "name": "Quà tặng mỹ nghệ",
+    "slug": "qua-tang-my-nghe",
+    "description": "Hộp quà gỗ, bút gỗ cao cấp, đồ lưu niệm và quà tặng doanh nghiệp",
+    "sortOrder": 6
+  }
+]

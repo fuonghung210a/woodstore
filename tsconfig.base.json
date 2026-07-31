@@ -21,7 +21,7 @@
       "@woodshop/grpc": ["packages/grpc/src"],
       "@woodshop/kafka": ["packages/kafka/src"],
       "@woodshop/validation": ["packages/validation/src"],
-      "@woodshop/database": ["packages/database/src"]
+      "@woodshop/database": ["packages/database/dist"]
     }
   },
   "exclude": ["node_modules", "dist"]
