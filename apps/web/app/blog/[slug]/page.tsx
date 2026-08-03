@@ -3,9 +3,10 @@ import { notFound } from 'next/navigation';
 import { api } from '@/lib/api';
 import { Header, Footer, formatDate } from '@/components/layout';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
-    const post = await api.getPostBySlug(params.slug);
+    const { slug } = await params;
+    const post = await api.getPostBySlug(slug);
     return {
       title: post.metaTitle ?? post.title,
       description: post.metaDescription ?? post.excerpt ?? post.title,
@@ -74,11 +75,12 @@ function renderMarkdown(content: string) {
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   let post;
   try {
-    post = await api.getPostBySlug(params.slug);
+    post = await api.getPostBySlug(slug);
   } catch {
     notFound();
   }

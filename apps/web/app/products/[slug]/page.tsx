@@ -9,9 +9,10 @@ import {
   formatDate,
 } from '@/components/layout';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
-    const product = await api.getProductBySlug(params.slug);
+    const { slug } = await params;
+    const product = await api.getProductBySlug(slug);
     return {
       title: product.name,
       description: product.description?.slice(0, 160) ?? product.name,
@@ -24,11 +25,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function ProductDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   let product;
   try {
-    product = await api.getProductBySlug(params.slug);
+    product = await api.getProductBySlug(slug);
   } catch {
     notFound();
   }

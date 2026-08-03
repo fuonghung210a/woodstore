@@ -4,10 +4,11 @@ import { api } from '@/lib/api';
 import { Header, Footer } from '@/components/layout';
 import { ProductGrid } from '@/components/product-card';
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   try {
+    const { slug } = await params;
     const categories = await api.listCategories();
-    const category = categories.find((c) => c.slug === params.slug);
+    const category = categories.find((c) => c.slug === slug);
     return {
       title: category ? category.name : 'Danh mục',
       description: category?.description ?? undefined,
@@ -20,11 +21,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CategoryPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
+  const { slug } = await params;
   // Lấy danh sách categories để tìm category theo slug
   const categories = await api.listCategories();
-  const category = categories.find((c) => c.slug === params.slug);
+  const category = categories.find((c) => c.slug === slug);
 
   if (!category) {
     notFound();

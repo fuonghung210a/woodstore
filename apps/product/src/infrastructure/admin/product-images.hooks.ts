@@ -3,7 +3,6 @@ import type {
   Before,
   RecordActionResponse,
 } from 'adminjs';
-import { flat } from 'adminjs';
 
 const IMAGES_TO_DELETE_CONTEXT_KEY = 'productImagesToDelete';
 
@@ -21,6 +20,19 @@ const toStringArray = (value: unknown): string[] => {
   );
 };
 
+const getSubmittedImages = (payload: Record<string, unknown>): unknown => {
+  if (payload.images !== undefined) {
+    return payload.images;
+  }
+
+  const indexedImages = Object.entries(payload)
+    .filter(([key]) => /^images\.\d+$/.test(key))
+    .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
+    .map(([, value]) => value);
+
+  return indexedImages.length > 0 ? indexedImages : undefined;
+};
+
 /**
  * AdminJS updates the record between its before/after hooks. Keep the removed
  * URLs in the shared action context so they can be deleted only after a
@@ -31,7 +43,7 @@ export const rememberRemovedProductImages: Before = (request, context) => {
     return request;
   }
 
-  const submittedImages = flat.get(request.payload ?? {}, 'images');
+  const submittedImages = getSubmittedImages(request.payload ?? {});
   if (submittedImages === undefined) {
     context[IMAGES_TO_DELETE_CONTEXT_KEY] = [];
     return request;

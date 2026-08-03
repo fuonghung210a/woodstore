@@ -9,6 +9,10 @@ import {
   deleteRemovedProductImagesAfterSave,
   rememberRemovedProductImages,
 } from './admin/product-images.hooks';
+import {
+  postArrayProperties,
+  productArrayProperties,
+} from './admin/resource-properties';
 
 // Kết nối AdminJS với Prisma
 AdminJS.registerAdapter({ Database, Resource });
@@ -46,13 +50,11 @@ function patchPrismaForAdminJS(prisma: PrismaService) {
   return anyPrisma._baseDmmf.modelMap;
 }
 
-const DEFAULT_ADMIN = {
-  email: process.env.ADMIN_EMAIL || 'admin@woodshop.com',
-  password: process.env.ADMIN_PASSWORD || 'woodshop123',
-};
-
 const authenticate = async (email: string, password: string) => {
-  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+  if (
+    email === process.env.ADMIN_EMAIL &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
     return Promise.resolve({ email });
   }
   return null;
@@ -86,6 +88,7 @@ const authenticate = async (email: string, password: string) => {
                         edit: ProductImages,
                       },
                     },
+                    ...productArrayProperties,
                   },
                   actions: {
                     edit: {
@@ -96,14 +99,20 @@ const authenticate = async (email: string, password: string) => {
                 },
               },
               { resource: { model: modelMap.Category, client: prisma } },
-              { resource: { model: modelMap.Post, client: prisma } },
+              {
+                resource: { model: modelMap.Post, client: prisma },
+                options: {
+                  properties: {
+                    ...postArrayProperties,
+                  },
+                },
+              },
             ],
           },
           auth: {
             authenticate,
             cookieName: 'woodshop_admin',
-            cookiePassword:
-              process.env.ADMIN_COOKIE_SECRET || 'woodshop-cookie-secret',
+            cookiePassword: process.env.ADMIN_COOKIE_SECRET!,
           },
         };
       },

@@ -29,6 +29,7 @@
     "@prisma/client": "^5.0.0",
     "@woodshop/database": "workspace:*",
     "adminjs": "^6.8.7",
+    "helmet": "^8.1.0",
     "multer": "^2.2.0",
     "react": "18.3.1",
     "reflect-metadata": "^0.1.13",

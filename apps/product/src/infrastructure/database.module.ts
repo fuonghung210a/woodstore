@@ -20,7 +20,7 @@ import { GetCategoryHandler } from "../application/handlers/get-category.handler
 import { ListCategoriesHandler } from "../application/handlers/list-categories.handler";
 import { FindCategoryChildrenHandler } from "../application/handlers/find-category-children.handler";
 import { CategoryController } from "../presentation/category.controller";
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { GlobalExceptionFilter } from "../presentation/filters/global-exception.filter";
 import { GetHomepageDataHandler } from "../application/handlers/get-homepage-data.handler";
 import { PrismaPostRepository } from "./database/repositories/post.repository.impl";
@@ -35,6 +35,8 @@ import { ListPublishedPostsHandler } from "../application/handlers/list-publishe
 import { PostController } from "../presentation/post.controller";
 import { UploadController } from "../presentation/upload.controller";
 import { StorageModule } from "./storage/storage.module";
+import { HealthController } from "../presentation/health.controller";
+import { AdminApiKeyGuard } from "../presentation/guards/admin-api-key.guard";
 
 @Module({
   imports: [
@@ -45,9 +47,10 @@ import { StorageModule } from "./storage/storage.module";
       logLevel: process.env.NODE_ENV === "development" ? "query" : "error",
     }),
   ],
-  controllers: [ProductController, CategoryController, PostController, UploadController],
+  controllers: [ProductController, CategoryController, PostController, UploadController, HealthController],
   providers: [
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
+    { provide: APP_GUARD, useClass: AdminApiKeyGuard },
     { provide: IProductRepository, useClass: PrismaProductRepository },
     { provide: ICategoryRepository, useClass: PrismaCategoryRepository },
     { provide: IPostRepository, useClass: PrismaPostRepository },

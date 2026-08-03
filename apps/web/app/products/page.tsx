@@ -11,24 +11,25 @@ export const metadata = {
 };
 
 interface Props {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     search?: string;
     woodSpecies?: string;
     minPrice?: string;
     maxPrice?: string;
-  };
+  }>;
 }
 
 export default async function ProductsPage({ searchParams }: Props) {
-  const page = Number(searchParams.page) || 1;
+  const resolvedSearchParams = await searchParams;
+  const page = Number(resolvedSearchParams.page) || 1;
   const result = await api.listProducts({
     page,
     limit: 12,
-    search: searchParams.search,
-    woodSpecies: searchParams.woodSpecies,
-    minPrice: searchParams.minPrice ? Number(searchParams.minPrice) : undefined,
-    maxPrice: searchParams.maxPrice ? Number(searchParams.maxPrice) : undefined,
+    search: resolvedSearchParams.search,
+    woodSpecies: resolvedSearchParams.woodSpecies,
+    minPrice: resolvedSearchParams.minPrice ? Number(resolvedSearchParams.minPrice) : undefined,
+    maxPrice: resolvedSearchParams.maxPrice ? Number(resolvedSearchParams.maxPrice) : undefined,
   });
 
   const totalPages = Math.max(1, result.totalPages);
@@ -36,11 +37,11 @@ export default async function ProductsPage({ searchParams }: Props) {
   function buildPageUrl(p: number): string {
     const params = new URLSearchParams();
     if (p > 1) params.set('page', String(p));
-    if (searchParams.search) params.set('search', searchParams.search);
-    if (searchParams.woodSpecies)
-      params.set('woodSpecies', searchParams.woodSpecies);
-    if (searchParams.minPrice) params.set('minPrice', searchParams.minPrice);
-    if (searchParams.maxPrice) params.set('maxPrice', searchParams.maxPrice);
+    if (resolvedSearchParams.search) params.set('search', resolvedSearchParams.search);
+    if (resolvedSearchParams.woodSpecies)
+      params.set('woodSpecies', resolvedSearchParams.woodSpecies);
+    if (resolvedSearchParams.minPrice) params.set('minPrice', resolvedSearchParams.minPrice);
+    if (resolvedSearchParams.maxPrice) params.set('maxPrice', resolvedSearchParams.maxPrice);
     const qs = params.toString();
     return `/products${qs ? `?${qs}` : ''}`;
   }
@@ -65,8 +66,8 @@ export default async function ProductsPage({ searchParams }: Props) {
           <div>
             <p className="text-label-sm text-ink-faint uppercase tracking-wider mb-6">
               {result.total} tác phẩm
-              {searchParams.search
-                ? ` — kết quả cho "${searchParams.search}"`
+              {resolvedSearchParams.search
+                ? ` — kết quả cho "${resolvedSearchParams.search}"`
                 : ''}
             </p>
 
